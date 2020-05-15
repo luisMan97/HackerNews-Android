@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.hackernewscolegium.R
 import com.example.hackernewscolegium.modules.news.entity.New
 import com.example.hackernewscolegium.modules.news.entity.then
-import com.example.hackernewscolegium.modules.news.presenter.NewsPresenter
 
 class NewsAdapter(private val newsListener: NewsListener): RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     private var listNews = ArrayList<New>()
-    lateinit var presenter: NewsPresenter
+    private lateinit var deletedTemporalNew: New
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(
@@ -33,6 +32,21 @@ class NewsAdapter(private val newsListener: NewsListener): RecyclerView.Adapter<
         //listNews.clear()
         listNews.addAll(data)
         notifyDataSetChanged()
+    }
+
+    fun deleteItem(index: Int) {
+        deletedTemporalNew = listNews[index]
+        listNews.removeAt(index)
+        notifyItemRemoved(index)
+    }
+
+    fun undoItem(index: Int) {
+        listNews.add(index, deletedTemporalNew)
+        notifyItemInserted(index)
+    }
+
+    fun getTitleOfITem(index: Int): String {
+        return listNews[index].title.isEmpty() then listNews[index].storyTitle ?: listNews[index].title
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

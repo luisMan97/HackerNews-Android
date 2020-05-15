@@ -11,16 +11,16 @@ class NewsPresenter(var view: NewsViewInterface?): NewsOutputRepositoryInterface
     private var interactor: NewsInteractor? = NewsInteractor(this)
     var routing: NewsRouting? = NewsRouting(view as Activity)
 
-    init {
-        interactor?.getNewsList()
-    }
-
     fun onDestroy() {
         view = null
         interactor?.unregister()
         interactor = null
         routing?.unregister()
         routing = null
+    }
+
+    fun getNewsList() {
+        interactor?.getNewsList()
     }
 
     fun showNewSelection(new: New) {
