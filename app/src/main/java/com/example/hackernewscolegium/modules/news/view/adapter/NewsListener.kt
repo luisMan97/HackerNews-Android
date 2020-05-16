@@ -4,4 +4,5 @@ import com.example.hackernewscolegium.modules.news.entity.New
 
 interface NewsListener {
     fun onNewClicked(new: New, position: Int)
+    fun onChangedItemCount(itemCountIsEmpty: Boolean)
 }

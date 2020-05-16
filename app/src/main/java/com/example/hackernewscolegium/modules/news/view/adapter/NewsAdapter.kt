@@ -8,11 +8,35 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.hackernewscolegium.R
 import com.example.hackernewscolegium.modules.news.entity.New
 import com.example.hackernewscolegium.modules.news.entity.then
+import kotlinx.android.synthetic.main.activity_main.*
 
 class NewsAdapter(private val newsListener: NewsListener): RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     private var listNews = ArrayList<New>()
     private lateinit var deletedTemporalNew: New
+
+    init {
+        registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                checkEmpty()
+            }
+
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                checkEmpty()
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                super.onItemRangeRemoved(positionStart, itemCount)
+                checkEmpty()
+            }
+
+            fun checkEmpty() {
+                newsListener.onChangedItemCount(itemCount == 0)
+            }
+        })
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(
@@ -29,7 +53,7 @@ class NewsAdapter(private val newsListener: NewsListener): RecyclerView.Adapter<
     }
 
     fun updateData(data: List<New>) {
-        //listNews.clear()
+        listNews.clear()
         listNews.addAll(data)
         notifyDataSetChanged()
     }
@@ -47,6 +71,10 @@ class NewsAdapter(private val newsListener: NewsListener): RecyclerView.Adapter<
 
     fun getTitleOfITem(index: Int): String {
         return listNews[index].title.isEmpty() then listNews[index].storyTitle ?: listNews[index].title
+    }
+
+    fun getListOfNews(): ArrayList<New> {
+        return listNews
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
